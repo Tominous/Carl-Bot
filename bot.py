@@ -54,17 +54,17 @@ def write_json(filename, contents):
 
 conn = sqlite3.connect('database.db')
 c = conn.cursor()
-# c.execute('''CREATE TABLE IF NOT EXISTS users
-#         (roles text, server text, location text,
-#         id text, names text, postcount int, retard int, sicklad int)''')
+ c.execute('''CREATE TABLE IF NOT EXISTS users
+         (roles text, server text, location text,
+         id text, names text, postcount int, retard int, sicklad int)''')
 
 
-# discord_logger = logging.getLogger('discord')
-# discord_logger.setLevel(logging.CRITICAL)
-# log = logging.getLogger()
-# log.setLevel(logging.INFO)
-# handler = logging.FileHandler(filename="carlbot.log", encoding='utf-8', mode='w')
-# log.addHandler(handler)
+ discord_logger = logging.getLogger('discord')
+ discord_logger.setLevel(logging.CRITICAL)
+ log = logging.getLogger()
+ log.setLevel(logging.INFO)
+ handler = logging.FileHandler(filename="carlbot.log", encoding='utf-8', mode='w')
+ log.addHandler(handler)
 log = logging.getLogger(__name__)
 
 
@@ -154,32 +154,32 @@ class CarlBot(commands.Bot):
                             VALUES (?, ?, ?, ?, ?)''',
                         (None, False, str(server.id), None, True))
             conn.commit()
-        # member_list = self.get_all_members()
-        # for member in member_list:
-        #     print("member: {}{}".format(member.name, member.id))
-        #     c.execute('''SELECT *
-        #                  FROM users 
-        #                  WHERE (id=? AND server=?)''',
-        #               (str(member.id), member.guild.id))
-        #     user_info = c.fetchall()
-        #     if user_info == []:
-        #         roles = ','.join([str(x.id)
-        #                           for x in member.roles if x.name != "@everyone"])
-        #         names = member.display_name
-        #         c.execute('''INSERT INTO users
-        #                      VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
-        #                   (roles, str(member.guild.id), None, str(member.id), names, 0, 0, 0))
-        # conn.commit()
-            # c.execute('''SELECT *
-            #              FROM userconfig 
-            #              WHERE (guild_id=? AND user_id=?)''',
-            #           (member.guild.id, member.id))
-            # user_config = c.fetchall()
-            # if user_config == []:
-            #     c.execute('''INSERT INTO userconfig
-            #                  VALUES (?, ?, ?, ?, ?, ?)''',
-            #               (member.guild.id, member.id, None, None, False, None))
-            #     conn.commit()
+         member_list = self.get_all_members()
+         for member in member_list:
+             print("member: {}{}".format(member.name, member.id))
+             c.execute('''SELECT *
+                          FROM users 
+                          WHERE (id=? AND server=?)''',
+                       (str(member.id), member.guild.id))
+             user_info = c.fetchall()
+             if user_info == []:
+                 roles = ','.join([str(x.id)
+                                   for x in member.roles if x.name != "@everyone"])
+                 names = member.display_name
+                 c.execute('''INSERT INTO users
+                              VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+                           (roles, str(member.guild.id), None, str(member.id), names, 0, 0, 0))
+         conn.commit()
+             c.execute('''SELECT *
+                          FROM userconfig 
+                          WHERE (guild_id=? AND user_id=?)''',
+                       (member.guild.id, member.id))
+             user_config = c.fetchall()
+             if user_config == []:
+                 c.execute('''INSERT INTO userconfig
+                              VALUES (?, ?, ?, ?, ?, ?)''',
+                           (member.guild.id, member.id, None, None, False, None))
+                 conn.commit()
 
             # Why is this commented out?
             # Because of how sql queries work, it's obviously faster to keep the db as small as needed
