@@ -766,50 +766,50 @@ class Automod:
 
 
 
-    # async def on_message(self, message):
-    #     if message is None:
-    #         return
-    #     if message.guild is None:
-    #         return
-    #     if message.author.id == self.bot.user.id:
-    #         return
-    #     if message.attachments:
-    #         s_url = message.attachments[0].url
-    #         filename = message.attachments[0].filename
-    #         if re.match(r"^(?:.*\.(mp4|webm|mkv|mov)$)$", filename):
-    #             s = await message.channel.send("Discord doesn't embed direct uploads, would you like me to upload it to streamable? (y/n)")
-    #             msg = await self.bot.wait_for('message', check=lambda m: m.content.lower() == 'y' and m.author == message.author, timeout=30.0)
-    #             if msg:
-    #                 await msg.delete()
-    #                 stream_msg = await message.channel.send('\U0001f44c sending file to streamable...')
-    #                 await s.delete()
-    #                 USER_AGENT = 'Carl-bot/2.1.9 (Linux; Ubuntu 16.8)'
+     async def on_message(self, message):
+         if message is None:
+             return
+         if message.guild is None:
+             return
+         if message.author.id == self.bot.user.id:
+             return
+         if message.attachments:
+             s_url = message.attachments[0].url
+             filename = message.attachments[0].filename
+             if re.match(r"^(?:.*\.(mp4|webm|mkv|mov)$)$", filename):
+                 s = await message.channel.send("Discord doesn't embed direct uploads, would you like me to upload it to streamable? (y/n)")
+                 msg = await self.bot.wait_for('message', check=lambda m: m.content.lower() == 'y' and m.author == message.author, timeout=30.0)
+                 if msg:
+                     await msg.delete()
+                     stream_msg = await message.channel.send('\U0001f44c sending file to streamable...')
+                     await s.delete()
+                     USER_AGENT = 'Carl-bot/2.1.9 (Linux; Ubuntu 16.8)'
                     
-    #                 async with self.bot.session.get(url="https://api.streamable.com/import?url={}".format(s_url), headers={'User-Agent': USER_AGENT}, auth=aiohttp.BasicAuth(login="carl.groth@protonmail.com", password="google123")) as r:
-    #                     print(await r.text())
-    #                     reply = await r.json()
-    #                 await stream_msg.edit(content="<https://streamable.com/{}> processing video...".format(reply['shortcode']))
-    #                 embed = False
-    #                 tries = 0
-    #                 while not embed:
-    #                     # gotta edit the message for the embed to show
-    #                     # the first link doesn't actually point to a video
-    #                     # and streamable takes a few seconds to process the video
-    #                     if (tries % 5) == 0:
-    #                         async with self.bot.session.get("https://api.streamable.com/videos/{}".format(reply['shortcode'])) as r:
-    #                             ree = await r.json()
-    #                         if ree['status'] == 2:
-    #                             embed = True
-    #                         elif tries == 100:
-    #                             break
-    #                     my_dots = (tries % 4) * "."
-    #                     # This would probably be enough for b1nzy
-    #                     # to personally ban my account, no snitch
-    #                     await stream_msg.edit(content="<https://streamable.com/{}> processing video{}".format(reply['shortcode'], my_dots))
+                     async with self.bot.session.get(url="https://api.streamable.com/import?url={}".format(s_url), headers={'User-Agent': USER_AGENT}, auth=aiohttp.BasicAuth(login="carl.groth@protonmail.com", password="google123")) as r:
+                         print(await r.text())
+                         reply = await r.json()
+                     await stream_msg.edit(content="<https://streamable.com/{}> processing video...".format(reply['shortcode']))
+                     embed = False
+                     tries = 0
+                     while not embed:
+                         # gotta edit the message for the embed to show
+                         # the first link doesn't actually point to a video
+                         # and streamable takes a few seconds to process the video
+                         if (tries % 5) == 0:
+                             async with self.bot.session.get("https://api.streamable.com/videos/{}".format(reply['shortcode'])) as r:
+                                 ree = await r.json()
+                             if ree['status'] == 2:
+                                 embed = True
+                             elif tries == 100:
+                                 break
+                         my_dots = (tries % 4) * "."
+                         # This would probably be enough for b1nzy
+                         # to personally ban my account, no snitch
+                         await stream_msg.edit(content="<https://streamable.com/{}> processing video{}".format(reply['shortcode'], my_dots))
 
-    #                     tries += 1
-    #                     await asyncio.sleep(1)
-    #                 await stream_msg.edit(content="https://streamable.com/{}".format(reply['shortcode']))
+                         tries += 1
+                         await asyncio.sleep(1)
+                     await stream_msg.edit(content="https://streamable.com/{}".format(reply['shortcode']))
 
     async def on_message_delete(self, message):
         if message is None:
